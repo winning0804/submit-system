@@ -1,0 +1,231 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>学生作业管理</title>
+    <style type="text/css">
+        *{
+            margin:0;
+            padding: 0;
+            list-style: none;
+            font-size: 12px;
+        }
+        h1{
+            font-size: 20px;
+        }
+        #head{
+            width:998px;
+            height:300px;
+            margin:10px;
+            border:1px solid #eee;
+            overflow: hidden;
+            margin-left: 100px;
+        }
+        .tab{
+            height:40px;
+            position:relative;
+            background-color: rgb(243, 239, 239);
+        }
+        .tab ul{
+            position: absolute;
+            width:1001px;
+            left:-1px;
+        }
+        .tab li{
+            float: left;
+            width:80px;
+            height:39px;
+            line-height: 39px;
+            text-align: center;
+            overflow: hidden;
+            background: #F7F7F7;
+            border-bottom: 1px solid #EEE;
+        }
+        .tab li.select{
+            background: #FFF;
+            border-bottom-color: #FFF;
+            border-left-color: 1px solid #EEE;
+            border-right-color: 1px solid #EEE;
+        }
+        .tab li a:link,.tab li a:visited{
+            text-decoration: none;
+            color:black
+        }
+        .tab li a:hover{
+            color:brown;
+        }
+        .contain1{
+            padding-left: 30px;
+            padding-top: 20px;
+            font-size: 20px;
+        
+        }
+        table {
+            width:100%;
+            border-collapse: collapse;
+        }
+
+        table,td,th {
+            border: 1px solid black;
+        }
+    </style>
+    <script type="text/javascript" src="jquery-1.12.4.js"></script>
+    <script>
+        /*
+        功能：
+        1.tab栏切换
+        2.发布考核
+        3.删除考核
+        4.查看考核详情
+        5.修改考核内容
+        6.分页
+
+
+        */
+
+        //Tab栏切换
+        function $(id){
+            return typeof id==='string'?document.getElementById(id):id;
+        }
+        window.onload=function () {
+            var titles=$('tab').getElementsByTagName('li');
+            var div=$('contain').getElementsByTagName('div');
+            for(var i=0;i<div.length;i++){
+                titles[i].id=i;
+                titles[i].onclick=function(){
+                    for(var j=0;j<div.length;j++){
+                        titles[j].className='';
+                        div[j].style.display='none';
+                    }
+                    this.className='select';
+                    div[this.id].style.display='block';
+                }
+            }
+            
+        }
+
+        //添加考核
+        function neatest(){
+
+            //1.获取输入的值
+            var tsn=document.getElementById('tsn').value;
+            var tsd=document.getElementById('tsd').value;
+            var ddl=document.getElementById('ddl').value;
+            //document.write(tsn+" "+tsd+" "+ddl+"<br>");
+            //var news1 = document.createElement("th");
+            //var guu=document.getElementsByClassName("contain1");
+            //news1=tsn;
+            //guu.appendChild(news1);
+            
+            //2.新建节点
+            var news1 = document.createElement("th");
+            var news2 = document.createElement("th");
+            var news3 = document.createElement("th");
+            var news4 = document.createElement("th");
+            var news5 = document.createElement("th");
+            var ne = document.createElement("tr");
+
+            //3.获取提交时间
+            var time=new Date();
+            var date=time.getDate();
+            var month=time.getMonth();
+            var year=time.getFullYear();
+            news3.innerHTML=year+"."+month+"."+date;
+
+            //4.添加操作
+            news5.innerHTML=`<a href="#" class="delete" onclick="dele(this)">删除</a>`
+
+            //5.考核标识码
+            news1.innerHTML=`${tsd}`;
+
+            //6.考核名称
+            news2.innerHTML=`<a href="#" class="details">${tsn}</a>`
+
+            //7.截止时间
+            news4.innerHTML=`${ddl}`;
+
+            //8.添加子节点
+            ne.appendChild(news1);
+            ne.appendChild(news2);
+            ne.appendChild(news3);
+            ne.appendChild(news4);
+            ne.appendChild(news5);
+            var table=document.getElementById("management");
+            table.append(ne);
+
+            /*var titles=$('tab').getElementsByTagName('li');
+            var div=$('contain').getElementsByTagName('div');
+            titles[0].className='';
+            div[0].style.display='none';
+            title[1].className='select';
+            div[1].style.display='block';*/
+        }
+
+        //删除考核
+        function dele(now){
+            $(now).parentNode.parentNode.remove();
+        }
+
+        
+    </script>
+</head>
+
+
+<body>
+    <div style="padding-top: 20px; text-align: center;">
+        <h1>作业管理</h1>
+    </div>
+    <div id="head">
+        <div id="tab" class="tab">
+            <ul>
+                <li class="select"><a href="#">考核发布</a></li>
+                <li><a href="#">考核管理</a></li>
+                <li><a href="#">作业管理</a></li>
+            </ul>
+        </div>
+        <div id="contain" class="contain">
+            <div class="contain1" style="display: block;">
+                <form>
+                    考核发布：<br><br>
+                    考核识别码：<input type="text" id="tsd"><br>
+                    考核名称：<input type="text" id="tsn"><br>
+                    考核内容：<textarea rows="5" cols="50"></textarea><br>
+                    截止时间：<input type="text" id="ddl"><br><br>
+                    <input type="submit" name="发布" onclick="neatest()"><br>
+                </form>
+            </div>
+            <div  style="display: none;">
+                <table id="management">
+                    <tr>
+                        <th>考核标识码</th>
+                        <th>考核名称</th>
+                        <th>上传时间</th>
+                        <th>截至时间</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr>
+                        <th>001</th>
+                        <th><a href="#">html</a></th>
+                        <th>2018.4.4</th>
+                        <th>2019.3.5</th>
+                        <th><a href="#" class="delete" onclick="dele(this)">删除</a></th>
+                    </tr>
+                </table>
+            </div>
+            <div  style="display: none;">
+                <table>
+                    <tr>
+                        <th>学号</th>
+                        <th>学生</th>
+                        <th>上传时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+
+</body>
+</html>
