@@ -14,26 +14,20 @@
 <body>
     <div class="page">
         <h1 >作业提交</h1><br>
-        <form>
+        <form action="${pageContext.request.contextPath }/UploadZip" method="POST" enctype="multipart/form-data">
             姓名：<input type="text" name="name"><br>
             学号：<input type="text" name="sid"><br><br>
             考核标识码：<select type="text" name="identCode" id="identCode" ></select><br/>
-        </form>
-        <form action="" method="POST">
-            <input type="file" name="file">
+            <input type="file" name="file" accept=".zip">
             <input type="submit" value="上传"><br><br>
-            
             <input type="submit" value="提交" onclick="submit()"><br>
         </form>
     </div>
 
     <script type="text/javascript" src="jquery-1.12.4.js"></script>
     <script>
-        var name=document.getElementsByName("name");
-        var id=document.getElementsByName("sid");
         function submit(){
-            var time = new Date();
-            document.write("提交成功");
+            alert("提交成功");
         }
     </script>
 </body>
