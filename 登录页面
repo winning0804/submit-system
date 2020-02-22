@@ -19,7 +19,7 @@
 <body>
     <div class="system">
         <h1>学生作业管理系统</h1>
-        <form src="" name="sign_in">
+        <form action="${pageContext.request.contextPath }/login_do">
         用户名:<input type="text" name="username"><br>
         密码:<input type="password" name="psw"><br><br>
         <input type="submit" value="提交" onclick="opening()">
@@ -29,7 +29,7 @@
     <script>
         
         function opening(){
-            window.open('学生作业管理页面.html');
+            window.open('testmanagement.html');
         }
     </script>
 </body>
