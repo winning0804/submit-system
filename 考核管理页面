@@ -3,6 +3,12 @@
     <meta charset="UTF-8">
     <title>考核管理</title>
     <style type="text/css">
+        body{
+            background-image: url("https://cn.bing.com/th?id=OIP.LRdPCPG5IhiG2iVW75z-hwHaEo&pid=Api&rs=1");
+        }
+        a:visited{
+            color: tomato;
+        }
         *{
             margin:0;
             padding: 0;
@@ -13,12 +19,13 @@
             font-size: 20px;
         }
         #head{
-            width:998px;
-            height:300px;
+            width:600px;
+            height:400px;
             margin:10px;
             border:1px solid #eee;
             overflow: hidden;
-            margin-left: 100px;
+            margin-left: 300px;
+            background-color: white;
         }
         .tab{
             height:40px;
@@ -65,11 +72,57 @@
         }
 
         table,td,th {
-            border: 1px solid black;
+            border: 1px solid rgb(245, 245, 156);
+            text-align: center;
+        }
+        th,tr{
+            width: 16%;
+        }
+        .test_lists{
+            width: 100%;
+        }
+        #tablehead{
+            background-color: #FFFFD9;
         }
         #page{
             display: flex;
         }
+        .inputs{
+            padding: 3px;
+            margin: 3px;
+            border-radius: 3px;
+        }
+        .button{
+            background-color: white;
+            font-family:"微软雅黑","宋体",arial,Helvetica,sans-serif;
+            border-radius:3px;
+            font-size: 20px;
+            border-width: 0px;
+            border-color:#b6cfee ;
+            height:30px;
+            width: 100px;
+            background-color: rgb(245, 245, 199);
+        }
+        .button:hover{
+            background-color: rgb(228, 228, 112);
+        }
+        .test_content{
+            text-align: center;
+        }
+        #shift{
+            margin:20px;
+        }
+        #page{
+            margin-top: 50px;
+            position: relative;
+        }
+        #front{
+            margin-left: 300px;
+        }
+        .change_page{
+            text-decoration:none;
+        }
+        
     </style>
     <script type="text/javascript" src="jquery-1.12.4.js"></script>
     <script>
@@ -95,31 +148,6 @@
             
         }
 
-
-        //发布考核
-        var httpRequest;
-        // function neatest() {
-        //     $.ajax({
-        //         type:"post",
-        //         url:"${pageContext.request.contextPath }/admin/release_do",
-        //         datatype:"json",
-        //         data:""
-        //     })
-        //     // if(window.XMLHttpRequest) {
-        //     //     httpRequest = new XMLHttpRequest();
-        //     // }else if(window.ActiveXObject) {
-        //     //     httpRequest = new ActiveXObject();
-        //     // }
-        //     // httpRequest.open("POST", "${pageContext.request.contextPath }/admin/release_do", true);
-        //     // httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        //     // var tsn=document.getElementById('tsn').value;
-        //     // var tsd=document.getElementById('tsd').value;
-        //     // var ddl=document.getElementById('ddl').value;
-        //     // var content=document.getElementById('content').value;
-        //     // httpRequest.send(JSON.stringify({
-        //     //     assesId:tsd,name:tsn,content:content,deadline:ddl
-        //     // }))
-        // }
 
         //加载页面
         change();
@@ -148,7 +176,7 @@
 
         //删除
         function dele(now){
-            var p=$(now).parentNode.parentNode.childNodes[0].value;
+            var p=$(now).parentNode.parentNode.childNodes[1].value;
             $.ajax({
                 type:"post",
                 url:"${pageContext.request.contextPath }/admin/assess_delet",
@@ -159,8 +187,36 @@
             });
         }
 
+        //批量删除
+        function deleteTr(obj){		
+            var p=$(now).parentNode.parentNode.childNodes[1].value;
+            $.ajax({
+                type:"post",
+                url:"${pageContext.request.contextPath }/admin/assess_delet",
+                data:"idenCode="+p,
+                success(msg){
+                    alert("删除成功");
+                }
+            });	
+        }
+
+        function pitchOn(){
+            var check=document.getElementsByName("cars");
+            var alc=document.getElementById("ca");
+            var txt=document.getElementsByClassName("ss");
+            var isd = alc.checked;
+            if(isd){
+                txt[0].innerText="取消全选";
+            }else{
+                txt[0].innerText="全选";
+            }
+            for(var i=0;i<check.length;i++){
+                check[i].checked=isd;
+            }
+        }
+
         //打开详情页面
-        var p=$(now).parentNode.parentNode.childNodes[0].value;
+        var p=$(now).parentNode.parentNode.childNodes[1].value;
         function opendetail(){
             $.ajax({
                 type:"post",
@@ -173,45 +229,68 @@
         }
 
         //分页
-        page(1,5);
-        function page(pg,size){
-            var table=document.getElementById("management");
-            var num=table.rows.length;
-            var total=0;
-            var p_size=size;
-            if(num/p_size>parseInt(num/p_size)){
-                total=parseInt(num/p_size)+1;
-            }
-            else{
-                total=parseInt(num/p_size);
-            }
-            var current=pg;
-            var start=(current-1)*p_size+1;
-            var end=current*p_size;
-            end=(end>num)?num:end;
-            for(var i=1;i<(num+1);i++){
-                var row=table.rows[i-1];
-                if(i>=start&&i<=end){
-                    row.style.display="block";
+        get_page();
+        function get_page(){
+            var trs=document.getElementsByClassName("test_lists");
+            var num=trs.length;
+            if(num>=10){
+                for(var i=0;i<10;i++){
+                    trs[i].style.display="table-row";
                 }
-                else{
-                    row.style.display="none";
+                for(var i=10;i<num;i++){
+                    trs[i].style.display="none";
                 }
             }
-            var str="当前第"+current+"页 ";
-            if(current>1){
-                str+="<li><a href=\"#\" class=\"before\" onclick=\"page("+(current-1)+","+p_size+")\">上一页</a></li>";
-            }else{
-                str+="<li>上一页</li>";
-            }
-            if(current<total){
-                str+="<li><a href=\"#\" class=\"after\" onclick=\"page("+(current+1)+","+p_size+")\">下一页</a></li>"
-            }else{
-                str+="<li>下一页</li>";
-            }
-            document.getElementById("page").innerHTML=str;
+            var pre_page = "1" ;
+            var lll=document.getElementById("pss");
+            lll.innerHTML="共"+(num)+"条数据,当前第<a id=\"pre_page\">"+(pre_page)+"</a>页";
         }
 
+        function next(){
+            var trs=document.getElementsByClassName("test_lists");
+            var num=trs.length;
+            var page=document.getElementById("pre_page").innerHTML;
+            var end_page=page;
+            if((num/10)>parseInt(num/10)){
+                end_page=parseInt(end_page)+1;
+            }
+            if(page===end_page){
+                return;
+            }
+            else{
+                for(var i=(page-1)*10;i<(page)*10;i++){
+                    trs[i].style.display="none";
+                }
+                var j=(parseInt(page)+1)*10;
+                if(j>num) j=num;
+                for(var i=(page)*10;i<j;i++){
+                    trs[i].style.display="table-row";
+                }
+                page=parseInt(page)+1;
+                document.getElementById("pre_page").innerHTML=page;
+            }
+        }
+
+        function before(){
+            var trs=document.getElementsByClassName("test_lists");
+            var num=trs.length;
+            var page=document.getElementById("pre_page").innerHTML;
+            if(page===1){
+                return;
+            }
+            else{
+                for(var i=(page-1)*10;i<(page)*10&&i<num;i++){
+                    trs[i].style.display="none";
+                }
+                var j=(page-2)*10;
+                if(j<1) j=0;
+                for(var i=j;i<(page-1)*10;i++){
+                    trs[i].style.display="table-row";
+                }
+                page--;
+                document.getElementById("pre_page").innerHTML=page;
+            }
+        }
 
     </script>
 </head>
@@ -225,38 +304,213 @@
         <div id="tab" class="tab">
             <ul>
                 <li class="select"><a href="#">考核发布</a></li>
-                <li><a href="#">考核管理</a></li>
+                <li><a href="#" onclick="get_page()">考核管理</a></li>
             </ul>
         </div>
         <div id="contain" class="contain">
             <div class="contain1" style="display: block;">
-                <form action="${pageContext.request.contextPath }/release_do" method="POST">
-                    考核发布：<br><br>
-                    考核识别码：<input type="text" id="tsd"><br>
-                    考核名称：<input type="text" id="tsn"><br>
-                    考核内容：<textarea rows="5" cols="50" id="content"></textarea><br>
-                    截止时间：<input type="text" id="ddl" value="yyyy-mm-dd"><br><br>
-                    <input type="submit" name="发布" onclick="neatest()"><br>
+                <form action="${pageContext.request.contextPath }/release_do" method="POST" class="test_content">
+                    <br><br><p style="font-size: 20px;">考核发布：</p><br>
+                    <input class="inputs" type="text" id="tsd" placeholder="请输入考核识别码">
+                    <input class="inputs"  type="text" id="tsn" placeholder="请输入考核名称"></br>
+                    <textarea class="inputs" rows="5" cols="50" id="content" placeholder="请输入考核内容"></textarea></br>
+                    <input class="inputs" type="text" id="ddl" placeholder="请输入截止日期"><br><br>
+                    <input class="button" type="submit" value="发布" onclick="neatest()"></br>
                 </form>
             </div>
             <div id="shift" style="display: none;">
                 <table id="management">
-                    <tr>
+                    <tr id="tablehead">
+                        <th><input type="checkbox"  id="ca" onclick="pitchOn()" /><span class="ss">全选</span></td></th>
                         <th>考核标识码</th>
                         <th>考核名称</th>
                         <th>上传时间</th>
-                        <th>截至时间</th>
+                        <th>截止时间</th>
                         <th>操作</th>
                     </tr>
-                    <tr id="test">
-                        <th>001</th>
-                        <th><a href="#" onclick="opendetail()">html</a></th>
-                        <th>2018-4-4</th>
-                        <th>2019-3-5</th>
-                        <th><a href="#" class="delete" onclick="dele(this)">删除</a></th>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>001</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
                     </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>002</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>003</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>004</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>005</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>006</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>007</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>008</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>009</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>010</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>011</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>012</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>013</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>014</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>015</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>016</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>017</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>018</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>019</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>020</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>021</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <tr class="test_lists">
+                        <td><input type="checkbox"name="cars" onclick="calculatAll()"/></td>
+                        <td>022</td>
+                        <td><a href="#" onclick="opendetail()">html</a></td>
+                        <td>2018-4-4</td>
+                        <td>2019-3-5</td>
+                        <td><a href="#" class="delete" onclick="dele(this)">删除</a></td>
+                    </tr>
+                    <td style="border:1px solid white;"><input type="button" onclick="deleteTr(this)" value="删除"/></td>
+                    
                 </table>
                 <ul id="page">
+                    <p id="pss">..</p>
+                    <li><a href="#" id="front" class="change_page" onclick="before()">《上一页</a></li>
+                    <li><a href="#" class="change_page" onclick="next()">下一页》</a></li>
                 </ul>
             </div>
         </div>
