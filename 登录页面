@@ -3,15 +3,37 @@
     <meta charset="UTF-8">
     <title>登录页面</title>
     <style type="text/css">
+        body{
+            background-image: url("https://cn.bing.com/th?id=OIP.LRdPCPG5IhiG2iVW75z-hwHaEo&pid=Api&rs=1");
+        }
         .system{
             margin-left: 400px;
             margin-top: 100px;
             height:280px;
             width:400px;
             border-style:solid;
-            border-color:slategray;
+            border-color:white;
             text-align: center;
-            background-color: rgb(221, 221, 221);
+            background-color: rgb(124, 24, 24);
+            background: white;
+            
+        }
+        .button{
+            background-color: white;
+            font-family:"微软雅黑","宋体",arial,Helvetica,sans-serif;
+            border-radius:3px;
+            font-size: 20px;
+            border-width: 0px;
+            border-color:#b6cfee ;
+            height:50px;
+            width: 200px;
+            background-color: #FFFFD9;
+        }
+        .button:hover{
+            background-color: rgb(228, 228, 112);
+        }
+        .inputs{
+            border-radius: 3px;
         }
     </style>
 </head>
@@ -20,9 +42,9 @@
     <div class="system">
         <h1>学生作业管理系统</h1>
         <form action="${pageContext.request.contextPath }/login_do">
-        用户名:<input type="text" name="username"><br>
-        密码:<input type="password" name="psw"><br><br>
-        <input type="submit" value="提交" onclick="opening()">
+        <input type="text" name="username" class="inputs" placeholder="请输入用户名"><br><br>
+        <input type="password" name="psw" class="inputs" placeholder="请输入密码"><br><br>
+        <input type="submit" value="提交" class="button" onclick="opening()">
         </form>
     </div>
     <script type="text/javascript" src="jquery-1.12.4.js"></script>
