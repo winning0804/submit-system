@@ -3,7 +3,11 @@
     <meta charset="UTF-8">
     <title>考核详情</title>
     <style type="text/css">
+        body{
+            background-image: url("https://cn.bing.com/th?id=OIP.LRdPCPG5IhiG2iVW75z-hwHaEo&pid=Api&rs=1");
+        }
         table {
+            background-color: white;
             margin-left: 300px;
             width:50%;
             border-collapse: collapse;
@@ -15,15 +19,15 @@
     </style>
 </head>
 
-<body>
+<body><br>
     <h1 style="text-align: center;">考核详情</h1>
     <div >
         <table>
-            <tr><th>考核标识码</th><th id='tid'></th></tr>
-            <tr><th>上传时间</th><th id='uptime'></th></tr>
-            <tr><th>考核名称</th><th><form><input type="text" id='name' ></form></th></tr>
-            <tr><th>考核内容</th><th><form><input type="text" id='content' ></form></th></tr>
-            <tr><th>截至时间</th><th><form><input type="text" id='deadline' ></form></th></tr>
+            <tr><th>考核标识码</th><th id='tid'>018</th></tr>
+            <tr><th>上传时间</th><th id='uptime'>2019-04-28</th></tr>
+            <tr><th>考核名称</th><th><form><input type="text" id='name' value="css" ></form></th></tr>
+            <tr><th>考核内容</th><th><form><input type="text" id='content' value="dsvskdh" ></form></th></tr>
+            <tr><th>截至时间</th><th><form><input type="text" id='deadline' value="2020-05-20" ></form></th></tr>
         </table>
         <br>
     </div>    
