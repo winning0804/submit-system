@@ -3,16 +3,27 @@
     <meta charset="UTF-8">
     <title>学生作业管理页面</title>
     <style type="text/css">
+        body{
+            background-image: url("https://cn.bing.com/th?id=OIP.LRdPCPG5IhiG2iVW75z-hwHaEo&pid=Api&rs=1");
+        }
         table {
-            width:100%;
+            margin-left: 10%;
+            width:80%;
             border-collapse: collapse;
+            background-color: white;
         }
 
+        td{
+            text-align: center;
+        }
         table,td,th {
             border: 1px solid black;
         }
         h1{
             text-align: center;
+        }
+        a{
+            text-decoration: none;
         }
     </style>
     <script type="text/javascript" src="jquery-1.12.4.js"></script>
@@ -95,7 +106,7 @@
     </script>
 </head>
 
-<body>
+<body><br>
     <h1>学生作业查看</h1>
     <table id='management'>
         <tr>
@@ -107,10 +118,10 @@
             <th>操作</th>>
         </tr>
         <tr>
-            <th>031802130</th>
-            <th>wn</th>
-            <th>2019-08-30</th>
-            <th>
+            <td>031802130</td>
+            <td>wn</td>
+            <td>2019-08-30</td>
+            <td>
                 <form action="${pageContext.request.contextPath/review_do } " name="form">
                     <select name="judge">
                         <option value="审核中">审核中</option>
@@ -119,13 +130,97 @@
                     </select>
                     <input type="submit" name="submit" value="提交" onclick="submits(this)">
                 </form>
-            </th>
-            <th>
+            </td>
+            <td>
                 <a href="#" id="download" onclick="download('${ag.document}')">下载</a>
-            </th>
-            <th>
+            </td>
+            <td>
                 <a href="#" name="delete" onclick="dele(this)">删除</a>
-            </th>
+            </td>
+        </tr>
+        <tr>
+            <td>0324898023</td>
+            <td>sdfn</td>
+            <td>2019-10-20</td>
+            <td>
+                <form action="${pageContext.request.contextPath/review_do } " name="form">
+                    <select name="judge">
+                        <option value="审核中">审核中</option>
+                        <option value="通过">通过</option>
+                        <option value="未通过">未通过</option>
+                    </select>
+                    <input type="submit" name="submit" value="提交" onclick="submits(this)">
+                </form>
+            </td>
+            <td>
+                <a href="#" id="download" onclick="download('${ag.document}')">下载</a>
+            </td>
+            <td>
+                <a href="#" name="delete" onclick="dele(this)">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td>02523321</td>
+            <td>hdif</td>
+            <td>2020-01-30</td>
+            <td>
+                <form action="${pageContext.request.contextPath/review_do } " name="form">
+                    <select name="judge">
+                        <option value="审核中">审核中</option>
+                        <option value="通过">通过</option>
+                        <option value="未通过">未通过</option>
+                    </select>
+                    <input type="submit" name="submit" value="提交" onclick="submits(this)">
+                </form>
+            </td>
+            <td>
+                <a href="#" id="download" onclick="download('${ag.document}')">下载</a>
+            </td>
+            <td>
+                <a href="#" name="delete" onclick="dele(this)">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td>032579233</td>
+            <td>wgvn</td>
+            <td>2019-10-23</td>
+            <td>
+                <form action="${pageContext.request.contextPath/review_do } " name="form">
+                    <select name="judge">
+                        <option value="审核中">审核中</option>
+                        <option value="通过">通过</option>
+                        <option value="未通过">未通过</option>
+                    </select>
+                    <input type="submit" name="submit" value="提交" onclick="submits(this)">
+                </form>
+            </td>
+            <td>
+                <a href="#" id="download" onclick="download('${ag.document}')">下载</a>
+            </td>
+            <td>
+                <a href="#" name="delete" onclick="dele(this)">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td>0312452350</td>
+            <td>wfwev</td>
+            <td>2018-08-30</td>
+            <td>
+                <form action="${pageContext.request.contextPath/review_do } " name="form">
+                    <select name="judge">
+                        <option value="审核中">审核中</option>
+                        <option value="通过">通过</option>
+                        <option value="未通过">未通过</option>
+                    </select>
+                    <input type="submit" name="submit" value="提交" onclick="submits(this)">
+                </form>
+            </td>
+            <td>
+                <a href="#" id="download" onclick="download('${ag.document}')">下载</a>
+            </td>
+            <td>
+                <a href="#" name="delete" onclick="dele(this)">删除</a>
+            </td>
         </tr>
     </table>
     
