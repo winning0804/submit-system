@@ -3,9 +3,16 @@
     <meta charset="UTF-8">
     <title>学生作业提交</title>
     <style type="text/css">
+        body{
+            background-image: url("https://cn.bing.com/th?id=OIP.LRdPCPG5IhiG2iVW75z-hwHaEo&pid=Api&rs=1");
+        }
         .page{
+            border-radius: 20px;
+            width: 500px;
+            background-color: white;
             margin-top: 100px;;
             text-align: center;
+            margin-left: 30%;
         }
     </style>
 </head>
