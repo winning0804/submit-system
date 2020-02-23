@@ -18,41 +18,38 @@
     <script type="text/javascript" src="jquery-1.12.4.js"></script>
     <script>
         
+        //审核状态改变
         var httpRequest;
         function submits(now) {
-            if(window.XMLHttpRequest) {
-                httpRequest = new XMLHttpRequest();
-            }else if(window.ActiveXObject) {
-                httpRequest = new ActiveXObject();
-            }
-            httpRequest.open("POST", "${ag.sid}&subDate=${ag.DateToString(ag.getsubDate()}&idenCode =${ag.idenCode}", true);
-            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             var new1=$(now).parentNode.parentNode.parentNode.childNodes[0].value();
-            httpRequest.send(new1);
+            $.ajax({
+                type:"post",
+                url:"${pageContext.request.contextPath }/admin/assignmentlist",
+                data:"idenCode="+p,
+                success(msg){
+                    alert("提交成功");
+                }
+            });
         }
 
+        //删除
         function dele(now) {
-            if(window.XMLHttpRequest) {
-                httpRequest = new XMLHttpRequest();
-            }else if(window.ActiveXObject) {
-                httpRequest = new ActiveXObject();
-            }
-            httpRequest.open("POST", "${ag.sid}&subDate=${ag.DateToString(ag.getsubDate()}&idenCode =${ag.idenCode}", true);
-            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             var new1=$(now).parentNode.parentNode.childNodes[0].value();
-            httpRequest.send(new1);
+            $.ajax({
+                type:"post",
+                url:"${pageContext.request.contextPath }/admin/assess_delet",
+                data:"idenCode="+p,
+                success(msg){
+                    alert("删除成功");
+                }
+            });
         }
 
+        //下载
         function download(filename){
             //alert(filename);
             downloadTemplate('${pageContext.request.contextPath }/admin/downloadZip', 'filename', filename);
         }
-        /**
-         * 用于下载导入模板时的隐藏form表单的提交，采用post方式提交
-         * @param action action映射地址
-         * @param type parameter的名称
-         * @param value parameter的值，这里为file的filename
-         */
         function downloadTemplate(action, type, value){
             var form = document.createElement('form');
             document.body.appendChild(form);
@@ -60,37 +57,35 @@
             form.action = action;
             form.id = 'zip';
             form.method = 'post';
-            
             var newElement = document.createElement("input");  
             newElement.setAttribute("type","hidden");  
             newElement.name = type;
             newElement.value = value;
             form.appendChild(newElement); 
-            
             form.submit();
         }
 
-        function getlist(){
+        //获取列表
+        window.onload=function(){
             $.ajax({
                 type:"get",
-                url:"${pageContext.request.contextPath }/admin_assess/assignmentlist.jsp”,
+                url:"${pageContext.request.contextPath }/admin/assignmentlist",
                 success:function(msg){
                     var content=" ";  
-                    for(var i=0;i<msg.length;i++){  
+                    var obj=eval("("+msg+")");
+                    for(var i=0;i<obj.length;i++){  
                         content+="<tr>";  
-                        content+="<th>"+msg[i].sid+"</th>"; 
-                        content+="<th>"+msg[i].sname+"</th>";
-                        content+="<th>"+msg[i].subDate+"</th>"; 
-                        content+="<th>"+msg[i].review+"
-                        <form action='${pageContext.request.contextPath/review_do } ' name='form'><select name='judge'><option value="审核中">审核中</option><option value="通过">通过</option><option value="未通过">未通过</option></select><input type="submit" name="submit" value="提交" onclick="submits()"></form></th>";
-                        content+='<a href="#" id="download" onclick="download("${ag.document}")">下载</a>';
-                        content+='<th><a href="#" class="delete" onclick="dele(this)">删除</a></th>'; 
+                        content+="<th>"+obj[i].sid+"</th>"; 
+                        content+="<th>"+obj[i].sname+"</th>";
+                        content+="<th>"+obj[i].subDate+"</th>"; 
+                        content+="<th>"+obj[i].review+"<form action=\"${pageContext.request.contextPath/review_do } \" name=\"form\"><select name=\"judge\"><option value=\"审核中\">审核中</option><option value=\"通过\">通过</option><option value=\"未通过\">未通过</option></select><input type=\"submit\" name=\"submit\" value=\"提交\" onclick=\"submits()\"></form></th>";
+                        content+="<a href=\"#\" id=\"download\" onclick=\"download(\"${ag.document}\")\">下载</a>";
+                        content+="<th><a href=\"#\" class=\"delete\" onclick=\"dele(this)\">删除</a></th>"; 
                         content+="</tr>";
                     }  
                     document.getElementById("management").innerHTML+=content; 
-
-                }
-                error :function(xhr){
+                },
+                error:function(xhr){
                     alert("加载失败");
                 }
             })
@@ -114,7 +109,7 @@
         <tr>
             <th>031802130</th>
             <th>wn</th>
-            <th>2019.08.04</th>
+            <th>2019-08-30</th>
             <th>
                 <form action="${pageContext.request.contextPath/review_do } " name="form">
                     <select name="judge">
