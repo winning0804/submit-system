@@ -67,7 +67,7 @@
         table,td,th {
             border: 1px solid black;
         }
-        .page{
+        #page{
             display: flex;
         }
     </style>
@@ -98,65 +98,118 @@
 
         //发布考核
         var httpRequest;
-        function neatest() {
-            if(window.XMLHttpRequest) {
-                httpRequest = new XMLHttpRequest();
-            }else if(window.ActiveXObject) {
-                httpRequest = new ActiveXObject();
-            }
-            httpRequest.open("POST", "${pageContext.request.contextPath }/admin/release_do", true);
-            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            var tsn=document.getElementById('tsn').value;
-            var tsd=document.getElementById('tsd').value;
-            var ddl=document.getElementById('ddl').value;
-            var content=document.getElementById('content').value;
-            httpRequest.send(JSON.stringify({
-                assesId:tsd,name:tsn,content:content,deadline:ddl
-            }))
-        }
+        // function neatest() {
+        //     $.ajax({
+        //         type:"post",
+        //         url:"${pageContext.request.contextPath }/admin/release_do",
+        //         datatype:"json",
+        //         data:""
+        //     })
+        //     // if(window.XMLHttpRequest) {
+        //     //     httpRequest = new XMLHttpRequest();
+        //     // }else if(window.ActiveXObject) {
+        //     //     httpRequest = new ActiveXObject();
+        //     // }
+        //     // httpRequest.open("POST", "${pageContext.request.contextPath }/admin/release_do", true);
+        //     // httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        //     // var tsn=document.getElementById('tsn').value;
+        //     // var tsd=document.getElementById('tsd').value;
+        //     // var ddl=document.getElementById('ddl').value;
+        //     // var content=document.getElementById('content').value;
+        //     // httpRequest.send(JSON.stringify({
+        //     //     assesId:tsd,name:tsn,content:content,deadline:ddl
+        //     // }))
+        // }
 
         //加载页面
-        $.ajax({
-            type:"get",
-            url:"${pageContext.request.contextPath }/admin/assess_managment",
-            success:function(msg){
-                var content=" ";  
-                for(var i=0;i<msg.length;i++){  
-                    content+="<tr>";  
-                    for(o in msg[i]){  
-                        content+="<th>"+msg[i][o]+"</th>";  
+        change();
+        function change(){
+            $.ajax({
+                type:"get",
+                url:"${pageContext.request.contextPath }/admin/assess_managment",
+                dataType:"json",
+                success:function(msg){
+                    var obj=eval("("+msg+")");
+                    var content=" ";  
+                    for(var i=0;i<obj.length;i++){  
+                        content+="<tr>";  
+                        content+="<th>"+obj[i].idenCode+"</th>"; 
+                        content+="<th><a href=\"#\" onclick=\"opendetail()\">"+obj[i].name+"</a></th>"; 
+                        content+="<th>"+obj[i].showDate+"</th>";
+                        content+="<th>"+obj[i].deadline+"</th>";
+                        content+="<th><a href=\"#\" class=\"delete\" onclick=\"dele(this)\">删除</a></th>"; 
+                        content+="</tr>"
                     }  
-                    content+='<th><a href="#" class="delete" onclick="dele(this)">删除</a></th>'; 
-                    content+="</tr>"
-                }  
-                document.getElementById("management").innerHTML+=content; 
-        })
-        
+                    document.getElementById("management").innerHTML+=content; 
+            },error:function(a){
+                alert("显示失败");}
+            });
+        }
+
         //删除
         function dele(now){
             var p=$(now).parentNode.parentNode.childNodes[0].value;
-            if(window.XMLHttpRequest) {
-                httpRequest = new XMLHttpRequest();
-            }else if(window.ActiveXObject) {
-                httpRequest = new ActiveXObject();
-            }
-            httpRequest.open("POST", "${pageContext.request.contextPath }/admin/assess_delet” , true);
-            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            httpRequest.send(p);
+            $.ajax({
+                type:"post",
+                url:"${pageContext.request.contextPath }/admin/assess_delet",
+                data:"idenCode="+p,
+                success(msg){
+                    alert("删除成功");
+                }
+            });
         }
 
         //打开详情页面
+        var p=$(now).parentNode.parentNode.childNodes[0].value;
         function opendetail(){
-            var p=$(now).parentNode.parentNode.childNodes[0].value;
-            if(window.XMLHttpRequest) {
-                httpRequest = new XMLHttpRequest();
-            }else if(window.ActiveXObject) {
-                httpRequest = new ActiveXObject();
+            $.ajax({
+                type:"post",
+                url:"${pageContext.request.contextPath }/admin/get_assess",
+                data:"idenCode="+p,
+                success(msg){
+                    window.open('testdetail.html');
+                }
+            })
+        }
+
+        //分页
+        page(1,5);
+        function page(pg,size){
+            var table=document.getElementById("management");
+            var num=table.rows.length;
+            var total=0;
+            var p_size=size;
+            if(num/p_size>parseInt(num/p_size)){
+                total=parseInt(num/p_size)+1;
             }
-            httpRequest.open("POST", "${pageContext.request.contextPath }/admin/get_assess" , true);
-            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            httpRequest.send(p);
-            window.open('testdetail.html');
+            else{
+                total=parseInt(num/p_size);
+            }
+            var current=pg;
+            var start=(current-1)*p_size+1;
+            var end=current*p_size;
+            end=(end>num)?num:end;
+            for(var i=1;i<(num+1);i++){
+                var row=table.rows[i-1];
+                if(i>=start&&i<=end){
+                    row.style.display="block";
+                }
+                else{
+                    row.style.display="none";
+                }
+            }
+            var str="当前第"+current+"页 ";
+            if(current>1){
+                str+="<li><a href=\"#\" class=\"before\" onclick=\"page("+(current-1)+","+p_size+")\">上一页</a></li>";
+            }else{
+                str+="<li>上一页</li>";
+            }
+            if(current<total){
+                str+="<li><a href=\"#\" class=\"after\" onclick=\"page("+(current+1)+","+p_size+")\">下一页</a></li>"
+            }else{
+                str+="<li>下一页</li>";
+            }
+            document.getElementById("page").innerHTML=str;
         }
 
 
@@ -186,7 +239,7 @@
                     <input type="submit" name="发布" onclick="neatest()"><br>
                 </form>
             </div>
-            <div  style="display: none;">
+            <div id="shift" style="display: none;">
                 <table id="management">
                     <tr>
                         <th>考核标识码</th>
@@ -198,14 +251,12 @@
                     <tr id="test">
                         <th>001</th>
                         <th><a href="#" onclick="opendetail()">html</a></th>
-                        <th>2018.4.4</th>
-                        <th>2019.3.5</th>
+                        <th>2018-4-4</th>
+                        <th>2019-3-5</th>
                         <th><a href="#" class="delete" onclick="dele(this)">删除</a></th>
                     </tr>
                 </table>
-                <ul class="page">
-                    <li><a href="#" class="before">上一页</a></li>
-                    <li><a href="#" class="next">下一页</a></li>
+                <ul id="page">
                 </ul>
             </div>
         </div>
